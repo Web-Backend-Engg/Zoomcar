@@ -1,10 +1,24 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
-export async function connectDB(){
-    try {
-        await mongoose.connect('mongodb+srv://kbhat:kbhat123@cluster0.2fmoj.mongodb.net/zoomcar');
-        console.log("Connection success");
-    } catch (error) {
-        console.log(error);
-    }
+function connectDB(){
+
+    mongoose.connect(process.env.MONGO_URL , {useUnifiedTopology: true , useNewUrlParser: true})
+
+    const connection = mongoose.connection
+
+    connection.on('connected' , ()=>{
+        console.log('Mongo DB Connection Successfull')
+    })
+
+    connection.on('error' , ()=>{
+        console.log('Mongo DB Connection Error')
+    })
+
+
 }
+
+connectDB()
+
+module.exports = mongoose
