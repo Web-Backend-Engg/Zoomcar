@@ -9,9 +9,9 @@ app.use(express.json())
 //env config
 dotenv.config();
 
-app.use('/api/cars/' , require('./routes/carsRoute'))
-app.use('/api/users/' , require('./routes/usersRoute'))
-app.use('/api/bookings/' , require('./routes/bookingsRoute'))
+app.use('/api/cars/' , require('./routes/carRoute'))
+app.use('/api/users/' , require('./routes/userRoute'))
+app.use('/api/bookings/' , require('./routes/bookingRoute'))
 
 
 const path = require('path')
