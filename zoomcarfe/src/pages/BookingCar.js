@@ -96,7 +96,7 @@ function BookingCar() {
           </Divider>
           <RangePicker
             showTime={{ format: "HH:mm" }}
-            format="MMM DD yyyy HH:mm"
+            format="MMM DD YYYY HH:mm"
             onChange={selectTimeSlots}
           />
           <br />
