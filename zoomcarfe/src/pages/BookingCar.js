@@ -3,22 +3,22 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import DefaultLayout from "../components/DefaultLayout";
 import Spinner from "../components/Spinner";
-import { getAllCars } from "../redux/actions/carsActions";
+import { getCar, getDesc } from "../redux/actions/carsActions";
 import moment from "moment";
 import { bookCar } from "../redux/actions/bookingActions";
 import StripeCheckout from "react-stripe-checkout";
-import AOS from 'aos';
-import {
-  useLoaderData,
-} from "react-router-dom";
+import AOS from "aos";
+import { useLoaderData } from "react-router-dom";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimeRangePicker } from "@mui/x-date-pickers-pro/DateTimeRangePicker";
 
-import 'aos/dist/aos.css'; // You can also use <link> for styles
+import "aos/dist/aos.css"; // You can also use <link> for styles
 const { RangePicker } = DatePicker;
 function BookingCar() {
   const match = useLoaderData();
-  const { cars } = useSelector((state) => state.carsReducer);
+  const { desc, car } = useSelector((state) => state.carsReducer);
   const { loading } = useSelector((state) => state.alertsReducer);
-  const [car, setcar] = useState({});
   const dispatch = useDispatch();
   const [from, setFrom] = useState();
   const [to, setTo] = useState();
@@ -28,12 +28,14 @@ function BookingCar() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (cars.length == 0) {
-      dispatch(getAllCars());
-    } else {
-      setcar(cars.find((o) => o._id == match));
-    }
-  }, [cars]);
+      dispatch(getCar(match));
+  }, [dispatch, match]);
+
+  useEffect(()=> {
+    console.log(car);
+    if(car?.name)
+      dispatch(getDesc(car.name))
+  }, [dispatch, car?.name])
 
   useEffect(() => {
     setTotalAmount(totalHours * car.rentPerHour);
@@ -43,29 +45,34 @@ function BookingCar() {
   }, [driver, totalHours]);
 
   function selectTimeSlots(values) {
-    setFrom(moment(values[0]).format("MMM DD yyyy HH:mm"));
+    if(values[0] && values[1]) {
+      console.log(values)
+      console.log(moment(values[0]).isValid())
+      console.log(moment(values[1]).isValid())
+
+      console.log(moment(values[0]).utc().format("YYYY-MM-DD"))
+      console.log(moment(values[1]).utc().format("YYYY-MM-DD"))
+    setFrom(moment(values[0]).format("MMM DD yyyy hh:mm"));
     setTo(moment(values[1]).format("MMM DD yyyy HH:mm"));
 
     setTotalHours(values[1].diff(values[0], "hours"));
-  }
+  }}
 
-  
-
-  function onToken(token){
+  function onToken(token) {
     const reqObj = {
-        token,
-        user: JSON.parse(localStorage.getItem("user"))._id,
-        car: car._id,
-        totalHours,
-        totalAmount,
-        driverRequired: driver,
-        bookedTimeSlots: {
-          from,
-          to,
-        },
-      };
-  
-      dispatch(bookCar(reqObj));
+      token,
+      user: JSON.parse(localStorage.getItem("user"))._id,
+      car: car._id,
+      totalHours,
+      totalAmount,
+      driverRequired: driver,
+      bookedTimeSlots: {
+        from,
+        to,
+      },
+    };
+
+    dispatch(bookCar(reqObj));
   }
 
   return (
@@ -76,11 +83,23 @@ function BookingCar() {
         className="d-flex align-items-center"
         style={{ minHeight: "90vh" }}
       >
-        <Col lg={10} sm={24} xs={24} className='p-3'>
-          <img src={car.image} className="carimg2 bs1 w-100" data-aos='flip-left' data-aos-duration='1500'/>
+        <Col lg={10} sm={24} xs={24} className="p-3">
+          <img
+            src={car.image}
+            className="carimg2 bs1 w-100"
+            data-aos="flip-left"
+            data-aos-duration="1500"
+          />
         </Col>
 
         <Col lg={10} sm={24} xs={24} className="text-right">
+          <Divider type="horizontal" dashed>
+            Car Info from Gen AI
+          </Divider>
+          <div style={{ textAlign: "justify" }}>
+            <p>{desc.content}</p>
+          </div>
+
           <Divider type="horizontal" dashed>
             Car Info
           </Divider>
@@ -94,11 +113,12 @@ function BookingCar() {
           <Divider type="horizontal" dashed>
             Select Time Slots
           </Divider>
-          <RangePicker
-            showTime={{ format: "HH:mm" }}
-            format="MMM DD YYYY HH:mm"
-            onChange={selectTimeSlots}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimeRangePicker
+              onChange={(newValue) => selectTimeSlots(newValue)}
+            />
+          </LocalizationProvider>
+
           <br />
           <button
             className="btn1 mt-2"
@@ -133,16 +153,12 @@ function BookingCar() {
               <StripeCheckout
                 shippingAddress
                 token={onToken}
-                currency='inr'
+                currency="usd"
                 amount={totalAmount * 100}
                 stripeKey="pk_test_51NFtVGSAZAXtdYSkpJntFLfuU3dQNlk1BVqldJWCWQUyDqAtoE1wHVhRCB2GEnGurggdZOd1L08afXnaMN0H7qcO00yUPQevQp"
               >
-                  <button className="btn1">
-                Book Now
-              </button>
+                <button className="btn1">Book Now</button>
               </StripeCheckout>
-
-              
             </div>
           )}
         </Col>

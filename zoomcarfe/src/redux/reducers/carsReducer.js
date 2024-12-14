@@ -1,5 +1,7 @@
 const initialData = {
     cars : [],
+    desc: {},
+    car: {}
 
 };
 
@@ -13,6 +15,20 @@ export const carsReducer = (state=initialData , action)=>{
                  cars : action.payload
              }
          }
+
+         case 'GET_CAR' : {
+            return{
+                ...state,
+                car: action.payload
+            }
+         }
+
+         case 'GET_PROMPT' : {
+            return{
+                ...state,
+                desc : action.payload
+            }
+        }
          
          default:return state
      }

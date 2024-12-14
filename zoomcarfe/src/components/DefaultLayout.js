@@ -44,7 +44,7 @@ function DefaultLayout(props) {
           <Row gutter={16} justify='center'>
               <Col lg={20} sm={24} xs={24}>
               <div className="d-flex justify-content-between">
-             <h1 ><b><Link to='/' style={{color:'slateblue'}}>Car Rental</Link></b></h1>
+             <h1 ><b><Link to='/' style={{color:'slateblue'}}>Zoomcar</Link></b></h1>
 
           <Dropdown overlay={menu} placement="bottomCenter">
             <Button>{user.username}</Button>
@@ -59,7 +59,7 @@ function DefaultLayout(props) {
       <div className="footer text-center">
       <hr />
 
-           <p>Designed and Developed By Jyoti 🪽</p>
+           <p>Zoomcar. All rights reserved 2024.</p>
           
       </div>
     </div>

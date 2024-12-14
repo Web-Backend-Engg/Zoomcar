@@ -16,6 +16,34 @@ export const getAllCars=()=>async dispatch=>{
 
 }
 
+export const getDesc=(carName)=>async dispatch=>{
+
+    dispatch({type: 'LOADING' , payload:true})
+
+    try {
+        const response = await axios.post('/api/cars/getprompt', {car: carName})
+        dispatch({type: 'GET_PROMPT', payload:response.data})
+        dispatch({type: 'LOADING' , payload:false})
+    } catch (error) {
+        console.log(error)
+        dispatch({type: 'LOADING' , payload:false})
+    }
+
+}
+
+export const getCar=(id)=>async dispatch=>{
+    dispatch({type: 'LOADING' , payload:true})
+
+    try {
+        const response = await axios.get(`/api/cars/getcar/${id}`)
+        dispatch({type: 'GET_CAR', payload:response.data})
+        dispatch({type: 'LOADING' , payload:false})
+    } catch (error) {
+        console.log(error)
+        dispatch({type: 'LOADING' , payload:false})
+    }
+}
+
 export const addCar=(reqObj)=>async dispatch=>{
 
     dispatch({type: 'LOADING' , payload:true})

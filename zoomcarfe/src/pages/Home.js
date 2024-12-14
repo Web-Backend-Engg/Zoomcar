@@ -27,8 +27,8 @@ function Home() {
 
     function setFilter(values){
 
-        var selectedFrom = moment(values[0] , 'MMM DD yyyy HH:mm')
-        var selectedTo = moment(values[1] , 'MMM DD yyyy HH:mm')
+        var selectedFrom = moment(values[0] , 'MMM DD YYYY HH:mm')
+        var selectedTo = moment(values[1] , 'MMM DD YYYY HH:mm')
 
         var temp=[]
 
@@ -72,7 +72,7 @@ function Home() {
                  
                  <Col lg={20} sm={24} className='d-flex justify-content-left'>
 
-                     <RangePicker showTime={{format: 'HH:mm'}} format='MMM DD yyyy HH:mm' onChange={setFilter}/>
+                     <RangePicker showTime={{format: 'HH:mm'}} format='MMM DD YYYY HH:mm' onChange={setFilter}/>
                  
                  </Col>
 

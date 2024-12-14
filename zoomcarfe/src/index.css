@@ -87,11 +87,12 @@ button{
     transform : translateY(-40px)
 
 }
-.carimg{
-  height:180px;
-  width: auto;
-  border-radius: 5px;
-  transform: translateY(-50px);
+.carimg {
+  height: 160px; /* Adjust the image to match the card height */
+  transform: translateY(-40px);
+  width: 100%; /* Make the image fill the card width */
+  border-radius: 5px; /* Match the card's border radius */
+  object-fit: cover; /* Ensure the image scales properly */
 }
 .car-content{
   transform: translateY(-200px);
